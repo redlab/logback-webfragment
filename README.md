@@ -3,7 +3,8 @@ logback-webfragment
 
 logback-webfragment provides a ServletContextListener for loading/reloading logback configuration from files in a servlet 3.x, Java7 enabled web application
 
-
+Usage
+===================
 ServletContextListener that can be used in web applications to define the location of the logback configuration.
 Should be the first listener to configure logback before using it. The webfragment is configured to be loaded before all others.
 Location is defined in the 'logbackConfigLocation' context param. Placeholders (ex: ${user.home}) are supported. 
@@ -15,3 +16,14 @@ Location examples:
  * log-relfile.xml -> loaded as file relative to the servlet container working directory
 
 The code in this listener is taken from <a href="http://jira.qos.ch/browse/LOGBACK-557">this issue</a> in logback jira.
+
+web.xml example
+
+	<context-param>
+		<param-name>logbackWebfragment.config.location</param-name>
+		<param-value>classpath:logback.xml</param-value>
+	</context-param>
+	<context-param>
+		<param-name>logbackWebfragment.config.default</param-name>
+		<param-value>true</param-value>
+	</context-param>

@@ -5,9 +5,11 @@
  */
 package be.redlab.logback.listener;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -30,9 +32,9 @@ import ch.qos.logback.core.util.StatusPrinter;
  * <p>
  * Should be the first listener to configure logback before using it. Location is defined in the
  * <code>logbackConfigLocation</code> context param. Placeholders (ex: ${user.home}) are supported. Location examples:<br />
- * /WEB-INF/log-sc.xml -> loaded from servlet context<br />
- * classpath:foo/log-cp.xml -> loaded from classpath<br />
- * file:/D:/log-absfile.xml -> loaded as url<br />
+ * /WEB-INF/log.xml -> loaded from servlet context<br />
+ * classpath:foo/log.xml -> loaded from classpath<br />
+ * file:/configs/logfile.xml -> loaded as url<br />
  * D:/log-absfile.xml -> loaded as absolute file<br />
  * log-relfile.xml -> loaded as file relative to the servlet container working directory<br />
  * </p>
@@ -43,9 +45,17 @@ import ch.qos.logback.core.util.StatusPrinter;
 public class LogbackConfigListener implements ServletContextListener {
 
 	/**
-	 * Context param name.
+	 *
 	 */
-	public static final String CONFIG_LOCATION_PARAM = "logbackConfigLocation";
+	private static final String TRUE = "true";
+	/**
+	 * Context parameter name for the location.
+	 */
+	public static final String CONFIG_LOCATION_PARAM = "logbackWebfragment.config.location";
+	/**
+	 *
+	 */
+	public static final String CONFIG_DEFAULTS_ON = "logbackWebfragment.config.default";
 
 	/**
 	 * Prefix for classpath urls.
@@ -58,40 +68,38 @@ public class LogbackConfigListener implements ServletContextListener {
 		ILoggerFactory ilc = LoggerFactory.getILoggerFactory();
 
 		if (!(ilc instanceof LoggerContext)) {
-			sc.log("Can not configure logback. " + LoggerFactory.class
-					+ " is using " + ilc + " which is not an instance of "
-					+ LoggerContext.class);
+			sc.log(new StringBuilder("Can not configure logback. ").append(LoggerFactory.class).append(" is using ").append(ilc)
+					.append(" which is not an instance of ").append(LoggerContext.class).toString());
 			return;
 		}
-
 		LoggerContext lc = (LoggerContext) ilc;
-
 		String location = sc.getInitParameter(CONFIG_LOCATION_PARAM);
-
-		if (location != null)
+		String defaultConfigOn = sc.getInitParameter(CONFIG_DEFAULTS_ON);
+		boolean useDefault = (null != defaultConfigOn && !defaultConfigOn.isEmpty() && TRUE
+				.equalsIgnoreCase(defaultConfigOn));
+		URL url = null;
+		if (location != null) {
 			location = OptionHelper.substVars(location, lc);
-
-		if (location == null) {
-			sc.log("Can not configure logback. Location is null."
-					+ " Maybe context param \"" + CONFIG_LOCATION_PARAM
-					+ "\" is not set or is not correct.");
-			return;
 		}
-
-		URL url = toUrl(sc, location);
-
-		if (url == null) {
-			sc.log("Can not configure logback. Could not find logback"
-					+ " config neither as servlet context-, nor as"
-					+ " classpath-, nor as url-, nor as file system"
-					+ " resource. Config location = \"" + location + "\".");
-			return;
+		if (null != location) {
+			url = toUrl(sc, location);
+			if (url != null) {
+				sc.log(new StringBuilder("Configuring logback. Config location = \"").append(location).append("\", full url = \"")
+						.append(url).append("\".").toString());
+				configure(sc, url, lc);
+			}
 		}
-
-		sc.log("Configuring logback. Config location = \"" + location
-				+ "\", full url = \"" + url + "\".");
-
-		configure(sc, url, lc);
+		if (location == null || url == null) {
+			if (useDefault) {
+				sc.log(new StringBuilder("Configuring logback default config. Could not find logback config, Config location = \"")
+						.append(location)
+						.append("\".").toString());
+				configure(sc, toUrl(sc, LOCATION_PREFIX_CLASSPATH + "logbackwebfragment-default.xml"), lc);
+			} else {
+				sc.log(new StringBuilder("Can not configure logback. Could not find logback config, Config location = \"").append(location)
+						.append("\".").toString());
+			}
+		}
 	}
 
 	protected void configure(final ServletContext sc, final URL location, final LoggerContext lc) {
@@ -106,16 +114,26 @@ public class LogbackConfigListener implements ServletContextListener {
 		StatusPrinter.printInCaseOfErrorsOrWarnings(lc);
 	}
 
+	protected void configureDefault(final ServletContext sc, final URL location, final LoggerContext lc) {
+		JoranConfigurator configurator = new JoranConfigurator();
+		configurator.setContext(lc);
+		lc.stop();
+		try {
+			configurator.doConfigure(location);
+		} catch (JoranException e) {
+			sc.log("Failed to configure logback.", e);
+		}
+		StatusPrinter.printInCaseOfErrorsOrWarnings(lc);
+	}
+
 	protected URL toUrl(final ServletContext sc, final String location) {
 		URL url = null;
-
 		if (location.startsWith("/"))
 			try {
 				url = sc.getResource(location);
 			} catch (MalformedURLException e1) {
 				// NO-OP
 			}
-
 		if (url == null && location.startsWith(LOCATION_PREFIX_CLASSPATH))
 			url = Thread
 					.currentThread()
@@ -123,7 +141,6 @@ public class LogbackConfigListener implements ServletContextListener {
 					.getResource(
 							location.substring(LOCATION_PREFIX_CLASSPATH
 									.length()));
-
 		if (url == null)
 			try {
 				url = new URL(location);
@@ -132,12 +149,12 @@ public class LogbackConfigListener implements ServletContextListener {
 			}
 
 		if (url == null) {
-			File file = new File(location);
+			Path file = Paths.get(location);
 			if (!file.isAbsolute())
-				file = file.getAbsoluteFile();
-			if (file.isFile())
+				file = file.toAbsolutePath();
+			if (Files.isReadable(file))
 				try {
-					url = file.toURI().normalize().toURL();
+					url = file.normalize().toUri().toURL();
 				} catch (MalformedURLException e) {
 					// NO-OP
 				}
