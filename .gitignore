@@ -1,5 +1,6 @@
 *.class
 target
+*~
 # Package Files #
 *.jar
 *.war
@@ -8,3 +9,4 @@ target
 .project
 .settings
 .classpath
+rebel.xml
