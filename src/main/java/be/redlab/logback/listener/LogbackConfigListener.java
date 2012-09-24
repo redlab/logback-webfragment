@@ -44,10 +44,11 @@ import ch.qos.logback.core.util.StatusPrinter;
 @WebListener
 public class LogbackConfigListener implements ServletContextListener {
 
-	/**
-	 *
-	 */
-	private static final String TRUE = "true";
+	private static final String INFO = "info";
+	private static final String WARN = "warn";
+	private static final String ERROR = "error.";
+	private static final String DEBUG = "debug";
+	private static final String TRACE = "trace";
 	/**
 	 * Context parameter name for the location.
 	 */
@@ -109,17 +110,17 @@ public class LogbackConfigListener implements ServletContextListener {
 	 */
 	private String toLevel(final String defaultConfigOn) {
 		if (null != defaultConfigOn) {
-			if ("trace".equalsIgnoreCase(defaultConfigOn)) {
-				return "trace";
-			} else if (defaultConfigOn.equalsIgnoreCase("debug")) {
-				return "debug";
-			} else if ("error.".equalsIgnoreCase(defaultConfigOn)) {
-				return "error";
-			} else if ("warn".equalsIgnoreCase(defaultConfigOn)) {
-				return "warn";
+			if (TRACE.equalsIgnoreCase(defaultConfigOn)) {
+				return TRACE;
+			} else if (DEBUG.equalsIgnoreCase(defaultConfigOn)) {
+				return DEBUG;
+			} else if (ERROR.equalsIgnoreCase(defaultConfigOn)) {
+				return ERROR;
+			} else if (WARN.equalsIgnoreCase(defaultConfigOn)) {
+				return WARN;
 			}
 		}
-		return "info";
+		return INFO;
 
 	}
 
