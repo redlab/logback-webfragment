@@ -1,7 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>be.redlab.logback</groupId>
-	<artifactId>logback-webfragment</artifactId>
+	<artifactId>aaa-logback-webfragment</artifactId>
 	<version>1.0.1-SNAPSHOT</version>
 	<name>logback-webfragment</name>
 	<description>logback-webfragment provides a ServletContextListener for loading/reloading logback configuration from files in a servlet 3.x enabled web application</description>
@@ -64,4 +65,71 @@
 		<name>redlab.be</name>
 		<url>http://www.redlab.be/</url>
 	</organization>
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.1.2</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.8.1</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>aggregate</id>
+								<goals>
+									<goal>aggregate</goal>
+								</goals>
+								<phase>site</phase>
+								<configuration>
+									<!-- Specific configuration for the aggregate report -->
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-site-plugin</artifactId>
+						<version>3.1</version>
+					</plugin>
+				</plugins>
+			</build>
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-project-info-reports-plugin</artifactId>
+						<version>2.4</version>
+					</plugin>
+				</plugins>
+			</reporting>
+		</profile>
+	</profiles>
+	<url>http://java.redlab.be/logbackwebfragment/</url>
+	<distributionManagement>
+		<site>
+			<id>localsitestage</id>
+			<name>logbackwebfragment</name>
+			<url>http://java.redlab.be/logbackwebfragment/</url>
+		</site>
+	</distributionManagement>
 </project>

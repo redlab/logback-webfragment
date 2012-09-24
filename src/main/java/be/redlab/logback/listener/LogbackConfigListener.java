@@ -75,26 +75,27 @@ public class LogbackConfigListener implements ServletContextListener {
 		LoggerContext lc = (LoggerContext) ilc;
 		String location = sc.getInitParameter(CONFIG_LOCATION_PARAM);
 		String defaultConfigOn = sc.getInitParameter(CONFIG_DEFAULTS_ON);
-		boolean useDefault = (null != defaultConfigOn && !defaultConfigOn.isEmpty() && TRUE
-				.equalsIgnoreCase(defaultConfigOn));
+		boolean useDefault = (null != defaultConfigOn && !defaultConfigOn.isEmpty());
 		URL url = null;
 		if (location != null) {
 			location = OptionHelper.substVars(location, lc);
 		}
 		if (null != location) {
 			url = toUrl(sc, location);
-			if (url != null) {
-				sc.log(new StringBuilder("Configuring logback. Config location = \"").append(location).append("\", full url = \"")
-						.append(url).append("\".").toString());
-				configure(sc, url, lc);
-			}
+		}
+		if (url != null) {
+			sc.log(new StringBuilder("Configuring logback. Config location = \"").append(location).append("\", full url = \"")
+					.append(url).append("\".").toString());
+			configure(sc, url, lc);
 		}
 		if (location == null || url == null) {
 			if (useDefault) {
-				sc.log(new StringBuilder("Configuring logback default config. Could not find logback config, Config location = \"")
+				String level = toLevel(defaultConfigOn);
+				sc.log(new StringBuilder("Configuring logback default config for level[").append(level)
+						.append("]. Could not find logback config, Config location = \"")
 						.append(location)
 						.append("\".").toString());
-				configure(sc, toUrl(sc, LOCATION_PREFIX_CLASSPATH + "logbackwebfragment-default.xml"), lc);
+				configure(sc, toUrl(sc, LOCATION_PREFIX_CLASSPATH + "logbackwebfragment-" + level + ".xml"), lc);
 			} else {
 				sc.log(new StringBuilder("Can not configure logback. Could not find logback config, Config location = \"").append(location)
 						.append("\".").toString());
@@ -102,19 +103,27 @@ public class LogbackConfigListener implements ServletContextListener {
 		}
 	}
 
-	protected void configure(final ServletContext sc, final URL location, final LoggerContext lc) {
-		JoranConfigurator configurator = new JoranConfigurator();
-		configurator.setContext(lc);
-		lc.stop();
-		try {
-			configurator.doConfigure(location);
-		} catch (JoranException e) {
-			sc.log("Failed to configure logback.", e);
+	/**
+	 * @param defaultConfigOn
+	 * @return
+	 */
+	private String toLevel(final String defaultConfigOn) {
+		if (null != defaultConfigOn) {
+			if ("trace".equalsIgnoreCase(defaultConfigOn)) {
+				return "trace";
+			} else if (defaultConfigOn.equalsIgnoreCase("debug")) {
+				return "debug";
+			} else if ("error.".equalsIgnoreCase(defaultConfigOn)) {
+				return "error";
+			} else if ("warn".equalsIgnoreCase(defaultConfigOn)) {
+				return "warn";
+			}
 		}
-		StatusPrinter.printInCaseOfErrorsOrWarnings(lc);
+		return "info";
+
 	}
 
-	protected void configureDefault(final ServletContext sc, final URL location, final LoggerContext lc) {
+	protected void configure(final ServletContext sc, final URL location, final LoggerContext lc) {
 		JoranConfigurator configurator = new JoranConfigurator();
 		configurator.setContext(lc);
 		lc.stop();
