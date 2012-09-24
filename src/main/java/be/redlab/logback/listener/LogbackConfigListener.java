@@ -49,6 +49,7 @@ public class LogbackConfigListener implements ServletContextListener {
 	private static final String ERROR = "error.";
 	private static final String DEBUG = "debug";
 	private static final String TRACE = "trace";
+	private static final String OFF = "off";
 	/**
 	 * Context parameter name for the location.
 	 */
@@ -118,6 +119,8 @@ public class LogbackConfigListener implements ServletContextListener {
 				return ERROR;
 			} else if (WARN.equalsIgnoreCase(defaultConfigOn)) {
 				return WARN;
+			} else if (OFF.equalsIgnoreCase(defaultConfigOn)) {
+				return OFF;
 			}
 		}
 		return INFO;
