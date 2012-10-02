@@ -5,11 +5,10 @@
  */
 package be.redlab.logback.listener;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -50,6 +49,7 @@ public class LogbackConfigListener implements ServletContextListener {
 	private static final String DEBUG = "debug";
 	private static final String TRACE = "trace";
 	private static final String OFF = "off";
+	private static final String FILE_TO_URL_IMPL_KEY = "fileToUrlImpl";
 	/**
 	 * Context parameter name for the location.
 	 */
@@ -162,18 +162,28 @@ public class LogbackConfigListener implements ServletContextListener {
 			}
 
 		if (url == null) {
-			Path file = Paths.get(location);
-			if (!file.isAbsolute())
-				file = file.toAbsolutePath();
-			if (Files.isReadable(file))
-				try {
-					url = file.normalize().toUri().toURL();
-				} catch (MalformedURLException e) {
-					// NO-OP
-				}
+			url = fileToUrl(location, url);
 		}
 
 		return url;
+	}
+
+	public URL fileToUrl(final String location, final URL url) {
+		Properties p = new Properties();
+		try {
+			p.load(LogbackConfigListener.class.getResourceAsStream("/setup.properties"));
+			String property = p.getProperty(FILE_TO_URL_IMPL_KEY);
+			FileToUrl newInstance = (FileToUrl) Class.forName(property).newInstance();
+			return newInstance.fileToUrl(location, url);
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to detect implementation for FileToUrl", e);
+		} catch (InstantiationException e) {
+			throw new RuntimeException("Unable to instantiate implementation for FileToUrl", e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException("Unable to access implementation for FileToUrl", e);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Unable to find implementation for FileToUrl", e);
+		}
 	}
 
 	@Override
