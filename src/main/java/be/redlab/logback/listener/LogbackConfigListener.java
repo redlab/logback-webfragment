@@ -100,7 +100,7 @@ public class LogbackConfigListener implements ServletContextListener {
 						.append("]. Could not find logback config, Config location = \"")
 						.append(location)
 						.append("\".").toString());
-				configure(sc, toUrl(sc, LOCATION_PREFIX_CLASSPATH + "logbackwebfragment-" + level + ".xml"), lc);
+				configure(sc, toUrl(sc, LOCATION_PREFIX_CLASSPATH + "be/redlab/logback/listener/logbackwebfragment-" + level + ".xml"), lc);
 			} else {
 				sc.log(new StringBuilder("Can not configure logback. Could not find logback config, Config location = \"").append(location)
 						.append("\".").toString());
@@ -174,7 +174,7 @@ public class LogbackConfigListener implements ServletContextListener {
 	public URL fileToUrl(final String location, final URL url) {
 		Properties p = new Properties();
 		try {
-			p.load(LogbackConfigListener.class.getResourceAsStream("/setup.properties"));
+			p.load(LogbackConfigListener.class.getResourceAsStream("/be/redlab/logback/listener/setup.properties"));
 			String property = p.getProperty(FILE_TO_URL_IMPL_KEY);
 			FileToUrl newInstance = (FileToUrl) Class.forName(property).newInstance();
 			return newInstance.fileToUrl(location, url);

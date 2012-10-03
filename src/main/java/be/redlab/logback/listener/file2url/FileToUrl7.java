@@ -17,8 +17,11 @@ import java.nio.file.Paths;
 import be.redlab.logback.listener.FileToUrl;
 
 /**
+ * Not available under JDK6
+ * 
+ * @version jdk7
  * @author redlab
- *
+ * 
  */
 public class FileToUrl7 implements FileToUrl {
 
