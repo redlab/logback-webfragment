@@ -55,7 +55,7 @@
 					<exclude>**/*.properties</exclude>
 				</excludes>
 			</resource>
-			</resources>
+		</resources>
 	</build>
 	<dependencies>
 		<dependency>
@@ -115,6 +115,18 @@
 						<configuration>
 							<source>1.6</source>
 							<target>1.6</target>
+							<excludes>
+								<exclude>**/FileToUrl7.java</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-install-plugin</artifactId>
+						<version>2.4</version>
+						<configuration>
+							<classifier>java6</classifier>
+							<artifactId>${project.artifactId}-${project.version}-java6</artifactId>
 						</configuration>
 					</plugin>
 				</plugins>

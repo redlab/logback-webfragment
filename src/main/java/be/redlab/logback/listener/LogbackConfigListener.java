@@ -1,7 +1,10 @@
 /*
- * Copyright (c) 2012 Balder VC and others. All rights reserved. This program and the accompanying materials are made
- * available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2012 Balder VC and others. All rights reserved. This program and the accompanying materials are
+ * dual-licensed under either the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation
+ *
+ * or (per the licensee's choosing)
+ *
+ * under the terms of the GNU Lesser General Public License version 2.1 as published by the Free Software Foundation.
  */
 package be.redlab.logback.listener;
 
