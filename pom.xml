@@ -5,6 +5,7 @@
 	<artifactId>aaa-logback-webfragment</artifactId>
 	<version>1.0.1-SNAPSHOT</version>
 	<name>logback-webfragment</name>
+	<packaging>jar</packaging>
 	<description>logback-webfragment provides a ServletContextListener for loading/reloading logback configuration from files in a servlet 3.x enabled web application</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -95,6 +96,13 @@
 		<name>redlab.be</name>
 		<url>http://www.redlab.be/</url>
 	</organization>
+	<developers>
+		<developer>
+			<name>Balder Van Camp</name>
+			<id>redlab</id>
+			<email>balder@redlab.be</email>
+		</developer>
+	</developers>
 	<profiles>
 		<profile>
 			<id>release</id>
@@ -153,13 +161,40 @@
 				</plugins>
 			</reporting>
 		</profile>
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.4</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
-	<url>http://java.redlab.be/logbackwebfragment/</url>
+	<url>http://logback.redlab.be//</url>
 	<distributionManagement>
 		<site>
 			<id>localsitestage</id>
 			<name>logbackwebfragment</name>
-			<url>http://java.redlab.be/logbackwebfragment/</url>
+			<url>http://logback.redlab.be/</url>
 		</site>
 	</distributionManagement>
 </project>
