@@ -177,30 +177,29 @@ public class LogbackConfigListener implements ServletContextListener {
 
 	protected URL toUrl(final ServletContext sc, final String location) {
 		URL url = null;
-		if (location.startsWith("/"))
+		if (location.startsWith("/")) {
 			try {
 				url = sc.getResource(location);
 			} catch (MalformedURLException e1) {
-				// NO-OP
 			}
-		if (url == null && location.startsWith(LOCATION_PREFIX_CLASSPATH))
+		}
+		if (url == null && location.startsWith(LOCATION_PREFIX_CLASSPATH)) {
 			url = Thread
 					.currentThread()
 					.getContextClassLoader()
 					.getResource(
 							location.substring(LOCATION_PREFIX_CLASSPATH
 									.length()));
-		if (url == null)
+		}
+		if (url == null) {
 			try {
 				url = new URL(location);
 			} catch (MalformedURLException e) {
-				// NO-OP
 			}
-
+		}
 		if (url == null) {
 			url = fileToUrl(location, url);
 		}
-
 		return url;
 	}
 
