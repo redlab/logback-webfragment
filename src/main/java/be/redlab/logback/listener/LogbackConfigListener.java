@@ -28,20 +28,53 @@ import ch.qos.logback.core.util.OptionHelper;
 import ch.qos.logback.core.util.StatusPrinter;
 
 /**
- * {@link ServletContextListener} that can be used in web applications to define the location of the logback
- * configuration.
+ * <p>
+ * A ServletContextListener that can be used in web applications to define the location of the logback configuration.
+ * This listener should be the first listener to be configured to configure logback before using it. The location of a
+ * logback configuration file is defined by the 'be.redlab.logback.location' web.xml context param. Placeholders from
+ * System.properties (ex: ${user.home}) are supported.
+ * </p>
+ * <p>
+ * Location property examples:
+ * </p>
+ * <li>/WEB-INF/logback.xml -> loaded from servlet context</li> <li>classpath:foo/logback.xml -> loaded from classpath</li>
+ * <li>file:/opt/configs/app/logback.xml -> loaded as url</li> <li>/opt/configs/app/logback.xml -> loaded as absolute
+ * file</li> <li>logback.xml -> loaded as file relative to the servlet container working directory</li>
  *
  * <p>
- * Should be the first listener to configure logback before using it. Location is defined in the
- * <code>logbackConfigLocation</code> context param. Placeholders (ex: ${user.home}) are supported. Location examples:<br />
- * /WEB-INF/log.xml -> loaded from servlet context<br />
- * classpath:foo/log.xml -> loaded from classpath<br />
- * file:/configs/logfile.xml -> loaded as url<br />
- * D:/log-absfile.xml -> loaded as absolute file<br />
- * log-relfile.xml -> loaded as file relative to the servlet container working directory<br />
+ * Aditionally, it is possible to use the context param 'be.redlab.logback.default' with values OFF, ERROR, WARN, INFO,
+ * DEBUG, TRACE or no value. If the configured be.redlab.logback.location results in an unfindable configuration or does
+ * not exists, a default logger that logs the given level (or info as default) to the current console, is activated. If
+ * the property 'be.redlab.logback.default' is not available, no default logger is activated.
  * </p>
- * The code in this listener is taken from <a href="http://jira.qos.ch/browse/LOGBACK-557">this issue</a> in logback
- * jira.
+ *
+ * <p>
+ * Servlet 3.x Environment<br />
+ * The webfragment is configured to be loaded before all others. The jars are named aaa-logback-webfragment, the aaa
+ * increasing the probability to be the first webfragment loaded in a Servlet 3.x environment.
+ * </p>
+ * <p>
+ * Servlet 2.x Environment<br />
+ * In a Servlet 2.x environment, configure the listener in your web.xml.
+ * </p>
+ * example extract from a web.xml
+ *
+ * <pre>
+ * 	&lt;context-param&gt;
+ * 		&lt;param-name&gt;be.redlab.logback.location&lt;/param-name&gt;
+ * 		&lt;param-value>classpath:logback.xml&lt;/param-value&gt;
+ * 	&lt;/context-param&gt;
+ * 	&lt;context-param&gt;
+ * 		&lt;param-name>be.redlab.logback.default&lt;/param-name&gt;
+ * 		&lt;param-value>info&lt;/param-value&gt;
+ * 	&lt;/context-param&gt;
+ * </pre>
+ * <p>
+ * Note<br />
+ * The code in this listener is inspired from <a href="http://jira.qos.ch/browse/LOGBACK-557">this issue</a> in logbacks
+ * jira. And altered by redlab. The code is under the same licenses as logback (EPL and LGPL, to the licensees choosing)
+ * </p>
+ *
  */
 @WebListener
 public class LogbackConfigListener implements ServletContextListener {

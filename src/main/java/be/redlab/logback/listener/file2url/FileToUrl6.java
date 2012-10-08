@@ -15,8 +15,10 @@ import java.net.URL;
 import be.redlab.logback.listener.FileToUrl;
 
 /**
+ * Java 6 Implementation of FileToUrl
+ * 
  * @author redlab
- *
+ * 
  */
 public class FileToUrl6 implements FileToUrl {
 
@@ -32,7 +34,6 @@ public class FileToUrl6 implements FileToUrl {
 			try {
 				url = file.toURI().normalize().toURL();
 			} catch (MalformedURLException e) {
-				// NO-OP
 			}
 		}
 		return url;

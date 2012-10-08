@@ -197,4 +197,11 @@
 			<url>http://logback.redlab.be/</url>
 		</site>
 	</distributionManagement>
+	<ciManagement>
+		<url>https://redlab.ci.cloudbees.com/</url>
+		<system>jenkins-ci</system>
+	</ciManagement>
+	<issueManagement>
+		<url>https://github.com/redlab/logback-webfragment/issues</url>
+	</issueManagement>
 </project>

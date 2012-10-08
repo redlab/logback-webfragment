@@ -17,11 +17,12 @@ import java.nio.file.Paths;
 import be.redlab.logback.listener.FileToUrl;
 
 /**
+ * Java 7 version of FileToUrl<br />
  * Not available under JDK6
- * 
- * @version jdk7
+ *
+ * @version Java 1.7
  * @author redlab
- * 
+ *
  */
 public class FileToUrl7 implements FileToUrl {
 
@@ -39,7 +40,6 @@ public class FileToUrl7 implements FileToUrl {
 			try {
 				url = file.normalize().toUri().toURL();
 			} catch (MalformedURLException e) {
-				// NO-OP
 			}
 		}
 		return url;
