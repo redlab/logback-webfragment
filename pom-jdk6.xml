@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>be.redlab.logback</groupId>
-	<artifactId>aaa-logback-webfragment-jdk6</artifactId>
+	<artifactId>aaa-logback-webfragment-java6</artifactId>
 	<version>1.0.1</version>
-	<name>logback-webfragment-jdk6</name>
+	<name>logback-webfragment-java6</name>
 	<packaging>jar</packaging>
 	<description>logback-webfragment-jdk6 provides a ServletContextListener for loading/reloading logback configuration from files in a servlet 3.x enabled web application</description>
 	<properties>

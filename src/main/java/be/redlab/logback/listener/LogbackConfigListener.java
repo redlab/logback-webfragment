@@ -56,11 +56,11 @@ public class LogbackConfigListener implements ServletContextListener {
 	/**
 	 * Context parameter name for the location.
 	 */
-	public static final String CONFIG_LOCATION_PARAM = "logbackWebfragment.config.location";
+	public static final String CONFIG_LOCATION_PARAM = "be.redlab.logback.location";
 	/**
 	 *
 	 */
-	public static final String CONFIG_DEFAULTS_ON = "logbackWebfragment.config.default";
+	public static final String CONFIG_DEFAULTS_ON = "be.redlab.logback.default";
 
 	/**
 	 * Prefix for classpath urls.
@@ -192,11 +192,9 @@ public class LogbackConfigListener implements ServletContextListener {
 	@Override
 	public void contextDestroyed(final ServletContextEvent sce) {
 		ILoggerFactory ilc = LoggerFactory.getILoggerFactory();
-
-		if (!(ilc instanceof LoggerContext))
-			return;
-
-		LoggerContext lc = (LoggerContext) ilc;
-		lc.stop();
+		if (ilc instanceof LoggerContext) {
+			LoggerContext lc = (LoggerContext) ilc;
+			lc.stop();
+		}
 	}
 }
