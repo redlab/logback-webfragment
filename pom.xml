@@ -7,6 +7,11 @@
 	<name>logback-webfragment</name>
 	<packaging>jar</packaging>
 	<description>logback-webfragment provides a ServletContextListener for loading/reloading logback configuration from files in a servlet 3.x enabled web application</description>
+ <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<be.redlab.logbackwebfragment.fileToUrlClass>be.redlab.logback.listener.file2url.FileToUrl7</be.redlab.logbackwebfragment.fileToUrlClass>
