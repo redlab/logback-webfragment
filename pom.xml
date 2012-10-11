@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>be.redlab.logback</groupId>
 	<artifactId>aaa-logback-webfragment</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<name>logback-webfragment</name>
 	<packaging>jar</packaging>
 	<description>logback-webfragment provides a ServletContextListener for loading/reloading logback configuration from files in a servlet 3.x enabled web application</description>
