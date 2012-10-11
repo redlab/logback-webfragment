@@ -80,7 +80,7 @@
 	</dependencies>
 	<scm>
 		<connection>scm:git:git://github.com/redlab/logback-webfragment.git</connection>
-		<developerConnection>scm:git:https://github.com/redlab/logback-webfragment.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:redlab/logback-webfragment.git</developerConnection>
 		<tag>master</tag>
 	</scm>
 	<licenses>
