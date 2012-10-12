@@ -91,7 +91,8 @@ public class LogbackConfigListener implements ServletContextListener {
 	 */
 	public static final String CONFIG_LOCATION_PARAM = "be.redlab.logback.location";
 	/**
-	 *
+	 * Setting this as context parameter with an value info, warn, error, debug, trace (or off). Activates a default
+	 * logger if no other configuration is found.
 	 */
 	public static final String CONFIG_DEFAULTS_ON = "be.redlab.logback.default";
 
