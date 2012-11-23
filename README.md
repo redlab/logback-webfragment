@@ -35,6 +35,18 @@ Dependencies
 ======================
 The pom is configured with logback 1.0.6 and a servlet 3.1-b01 artifacts as dependencies, both are set on scope 'provided' it is up to you to include the dependencies in your own jar/war/ear or let them be provided by your container. The code is compatible with logback 9.8.x to at least 1.0.6. However only in a servlet 3.x environment. The @WebListener annotation will normally not be found in lower versioned Servlet Containers.
 
+Maven
+======================
+Java 7 version
+
+	<dependency>
+	    <groupId>be.redlab.logback</groupId>
+	    <artifactId>aaa-logback-webfragment</artifactId>
+	    <version>1.0.1</version>
+	</dependency>
+I can upload Java 6 version if requested.
+
+
 example
 =====================
 extract from a web.xml
