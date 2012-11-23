@@ -2,6 +2,8 @@ logback-webfragment
 ===================
 logback-webfragment provides a ServletContextListener for loading/reloading logback configuration from files in a servlet 3.x, Java 7 or Java 6 enabled web application.
 
+[![Build Status](https://redlab.ci.cloudbees.com/job/logback-webfragment/badge/icon)](https://redlab.ci.cloudbees.com/job/logback-webfragment/)
+
 Usage
 ===================
 A ServletContextListener that can be used in web applications to define the location of the logback configuration.
