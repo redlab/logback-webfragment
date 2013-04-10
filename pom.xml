@@ -198,7 +198,7 @@
 			</build>
 		</profile>
 	</profiles>
-	<url>http://logback.redlab.be//</url>
+	<url>http://logback.redlab.be/</url>
 	<distributionManagement>
 		<site>
 			<id>localsitestage</id>
