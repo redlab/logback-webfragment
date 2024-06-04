@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2013 Balder VC and others. All rights reserved. This program and the accompanying materials are
+ * Copyright (c) 2023 Balder VC and others. All rights reserved. This program and the accompanying materials are
  * dual-licensed under either the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation
- * 
+ *
  * or (per the licensee's choosing)
- * 
+ *
  * under the terms of the GNU Lesser General Public License version 2.1 as published by the Free Software Foundation.
  */
 package be.redlab.logback.listener;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
@@ -18,6 +19,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import ch.qos.logback.core.spi.ScanException;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 
@@ -37,12 +39,12 @@ import ch.qos.logback.core.util.StatusPrinter;
  * <p>
  * Location property examples:
  * </p>
- * <li>/WEB-INF/logback.xml -> loaded from servlet context</li> <li>classpath:foo/logback.xml -> loaded from classpath</li>
+ * <ul><li>/WEB-INF/logback.xml -> loaded from servlet context</li> <li>classpath:foo/logback.xml -> loaded from classpath</li>
  * <li>file:/opt/configs/app/logback.xml -> loaded as url</li> <li>/opt/configs/app/logback.xml -> loaded as absolute
- * file</li> <li>logback.xml -> loaded as file relative to the servlet container working directory</li>
+ * file</li> <li>logback.xml -> loaded as file relative to the servlet container working directory</li></ul>
  *
  * <p>
- * Aditionally, it is possible to use the context param 'be.redlab.logback.default' with values OFF, ERROR, WARN, INFO,
+ * Additionally, it is possible to use the context param 'be.redlab.logback.default' with values OFF, ERROR, WARN, INFO,
  * DEBUG, TRACE or no value. If the configured be.redlab.logback.location results in an unfindable configuration or does
  * not exists, a default logger that logs the given level (or info as default) to the current console, is activated. If
  * the property 'be.redlab.logback.default' is not available, no default logger is activated.
@@ -107,8 +109,8 @@ public class LogbackConfigListener implements ServletContextListener {
 		ILoggerFactory ilc = LoggerFactory.getILoggerFactory();
 
 		if (!(ilc instanceof LoggerContext)) {
-			sc.log(new StringBuilder("Can not configure logback. ").append(LoggerFactory.class).append(" is using ").append(ilc)
-					.append(" which is not an instance of ").append(LoggerContext.class).toString());
+			sc.log("Can not configure logback. " + LoggerFactory.class + " is using " + ilc +
+					" which is not an instance of " + LoggerContext.class);
 			return;
 		}
 		LoggerContext lc = (LoggerContext) ilc;
@@ -117,34 +119,37 @@ public class LogbackConfigListener implements ServletContextListener {
 		boolean useDefault = (null != defaultConfigOn && !defaultConfigOn.isEmpty());
 		URL url = null;
 		if (location != null) {
-			location = OptionHelper.substVars(location, lc);
+			try {
+				location = OptionHelper.substVars(location, lc);
+			} catch (ScanException e) {
+				sc.log("Unable to locate the requested logback configuration url in "+location, e);
+			}
 		}
 		if (null != location) {
 			url = toUrl(sc, location);
 		}
 		if (url != null) {
-			sc.log(new StringBuilder("Configuring logback. Config location = \"").append(location).append("\", full url = \"")
-					.append(url).append("\".").toString());
+			sc.log("Configuring logback. Config location = \"" + location + "\", full url = \"" +
+					url + "\".");
 			configure(sc, url, lc);
 		}
 		if (location == null || url == null) {
 			if (useDefault) {
 				String level = toLevel(defaultConfigOn);
-				sc.log(new StringBuilder("Configuring logback default config for level[").append(level)
-						.append("]. Could not find logback config, Config location = \"")
-						.append(location)
-						.append("\".").toString());
+				sc.log("Configuring logback default config for level[" + level +
+						"]. Could not find logback config, Config location = \"" +
+						location +
+						"\".");
 				configure(sc, toUrl(sc, LOCATION_PREFIX_CLASSPATH + "be/redlab/logback/listener/logbackwebfragment-" + level + ".xml"), lc);
 			} else {
-				sc.log(new StringBuilder("Can not configure logback. Could not find logback config, Config location = \"").append(location)
-						.append("\".").toString());
+				sc.log("Can not configure logback. Could not find logback config, Config location = \"" + location +
+						"\".");
 			}
 		}
 	}
 
 	/**
 	 * @param defaultConfigOn
-	 * @return
 	 */
 	private String toLevel(final String defaultConfigOn) {
 		if (null != defaultConfigOn) {
@@ -209,7 +214,7 @@ public class LogbackConfigListener implements ServletContextListener {
 		try {
 			p.load(LogbackConfigListener.class.getResourceAsStream("/be/redlab/logback/listener/setup.properties"));
 			String property = p.getProperty(FILE_TO_URL_IMPL_KEY);
-			FileToUrl newInstance = (FileToUrl) Class.forName(property).newInstance();
+			FileToUrl newInstance = (FileToUrl) Class.forName(property).getDeclaredConstructor().newInstance();
 			return newInstance.fileToUrl(location, url);
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to detect implementation for FileToUrl", e);
@@ -219,8 +224,12 @@ public class LogbackConfigListener implements ServletContextListener {
 			throw new RuntimeException("Unable to access implementation for FileToUrl", e);
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Unable to find implementation for FileToUrl", e);
-		}
-	}
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException("Unable to invoke constructor for FileToUrl", e);
+        } catch (NoSuchMethodException e) {
+			throw new RuntimeException("Unable to find constructor for FileToUrl", e);
+        }
+    }
 
 	@Override
 	public void contextDestroyed(final ServletContextEvent sce) {

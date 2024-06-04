@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>be.redlab.logback</groupId>
 	<artifactId>aaa-logback-webfragment</artifactId>
@@ -12,35 +14,21 @@
     <version>7</version>
   </parent>
 	<properties>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.7</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<be.redlab.logbackwebfragment.fileToUrlClass>be.redlab.logback.listener.file2url.FileToUrl7</be.redlab.logbackwebfragment.fileToUrlClass>
 	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.0</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<filtering>true</filtering>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
+				<version>3.0.1</version>
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<preparationGoals>clean package</preparationGoals>
-					<tagNameFormat>@{project.version}</tagNameFormat>
 					<remoteTagging>false</remoteTagging>
 				</configuration>
 			</plugin>
@@ -72,7 +60,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.0</version>
+			<version>1.3.12</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -101,10 +89,6 @@
 			<comments>As per the licensee's choosing, one of both</comments>
 		</license>
 	</licenses>
-	<organization>
-		<name>redlab.be</name>
-		<url>http://www.redlab.be/</url>
-	</organization>
 	<developers>
 		<developer>
 			<name>Balder Van Camp</name>
@@ -120,7 +104,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>2.2</version>
+						<version>3.3.1</version>
 						<executions>
 							<execution>
 								<id>attach-sources</id>
@@ -133,7 +117,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.9</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -156,7 +139,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-site-plugin</artifactId>
-						<version>3.1</version>
 					</plugin>
 				</plugins>
 			</build>
@@ -165,7 +147,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-project-info-reports-plugin</artifactId>
-						<version>2.4</version>
 					</plugin>
 				</plugins>
 			</reporting>
@@ -183,7 +164,6 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.4</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -198,12 +178,12 @@
 			</build>
 		</profile>
 	</profiles>
-	<url>http://logback.redlab.be/</url>
+	<url>https://logback.redlab.be/</url>
 	<distributionManagement>
 		<site>
 			<id>localsitestage</id>
 			<name>logbackwebfragment</name>
-			<url>http://logback.redlab.be/</url>
+			<url>https://logback.redlab.be/</url>
 		</site>
 	</distributionManagement>
 	<ciManagement>
