@@ -1,12 +1,14 @@
 *.class
-target
+target/
 *~
 # Package Files #
 *.jar
 *.war
 *.ear
-# elipse #
+# IDE #
 .project
 .settings
 .classpath
 rebel.xml
+.idea/
+*.iml

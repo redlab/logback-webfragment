@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2023 Balder VC and others. All rights reserved. This program and the accompanying materials are
  * dual-licensed under either the terms of the Eclipse Public License v1.0 as published by the Eclipse Foundation
- * 
+ *
  * or (per the licensee's choosing)
- * 
+ *
  * under the terms of the GNU Lesser General Public License version 2.1 as published by the Free Software Foundation.
  */
 package be.redlab.logback.listener;
@@ -39,12 +39,12 @@ import ch.qos.logback.core.util.StatusPrinter;
  * <p>
  * Location property examples:
  * </p>
- * <li>/WEB-INF/logback.xml -> loaded from servlet context</li> <li>classpath:foo/logback.xml -> loaded from classpath</li>
+ * <ul><li>/WEB-INF/logback.xml -> loaded from servlet context</li> <li>classpath:foo/logback.xml -> loaded from classpath</li>
  * <li>file:/opt/configs/app/logback.xml -> loaded as url</li> <li>/opt/configs/app/logback.xml -> loaded as absolute
- * file</li> <li>logback.xml -> loaded as file relative to the servlet container working directory</li>
+ * file</li> <li>logback.xml -> loaded as file relative to the servlet container working directory</li></ul>
  *
  * <p>
- * Aditionally, it is possible to use the context param 'be.redlab.logback.default' with values OFF, ERROR, WARN, INFO,
+ * Additionally, it is possible to use the context param 'be.redlab.logback.default' with values OFF, ERROR, WARN, INFO,
  * DEBUG, TRACE or no value. If the configured be.redlab.logback.location results in an unfindable configuration or does
  * not exists, a default logger that logs the given level (or info as default) to the current console, is activated. If
  * the property 'be.redlab.logback.default' is not available, no default logger is activated.
